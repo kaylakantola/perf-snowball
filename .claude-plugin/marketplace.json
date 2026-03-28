@@ -1,0 +1,13 @@
+{
+  "name": "perf-snowball",
+  "description": "Performance Snowball plugins",
+  "owner": {
+    "name": "Kayla Kantola"
+  },
+  "plugins": [
+    {
+      "name": "perf-snowball",
+      "source": "./"
+    }
+  ]
+}

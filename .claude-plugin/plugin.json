@@ -1,0 +1,9 @@
+{
+  "name": "perf-snowball",
+  "version": "0.1.0",
+  "description": "Weekly Datadog-powered performance sweep with improvement tracking and impact reporting. Small gains that snowball into major impact.",
+  "author": {
+    "name": "Kayla Kantola"
+  },
+  "keywords": ["performance", "datadog", "observability", "optimization"]
+}
