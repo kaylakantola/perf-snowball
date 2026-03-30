@@ -31,11 +31,24 @@ Run the weekly performance analysis. Accepts an optional focus area.
    - Frontend RUM data (if available)
    - Resource metrics (if available)
 
-3. If a focus area is provided, scope queries accordingly:
+3. If a focus area is provided, scope queries accordingly. Focus areas are **composable** — a user can combine a team filter with a topic filter (e.g., "Commerce team database queries").
+
+   **Team filtering** (triggered by "[team] team" in focus text, e.g., "Commerce team"):
+   - First check `local/` in the plugin root for a pre-built team-to-endpoint mapping (e.g., `local/{orgname}-team-endpoints.md`). If found, use the cached endpoint patterns directly — no need to scan `package.yml` files.
+   - If no local mapping exists, fall back to the dynamic discovery process in `references/packwerk-team-endpoints.md`: read `packs/*/package.yml` to find owned packs, enumerate controllers, derive resource name patterns.
+   - Scope all APM and error rate queries to only those resource name patterns
+
+   **Topic filtering** (applied on top of team filtering if both are present):
    - "frontend" -> RUM, page load, Core Web Vitals
    - "database" / "queries" -> DBM, slow queries, N+1s
    - "API" / "latency" / "backend" -> APM endpoint traces
    - Any other text -> use as a filter on service/endpoint names
+
+   **Examples:**
+   - "Commerce team" -> all Commerce endpoints, all query types
+   - "Commerce team database queries" -> Commerce endpoints, DBM/slow queries only
+   - "frontend" -> all endpoints, RUM/Core Web Vitals only
+   - "Commerce team API" -> Commerce endpoints, APM traces only
 
 4. Identify 3-5 candidates ranked by effort vs. impact. For each candidate, validate it is a sustained issue by checking 2-4 weeks of historical data. Filter out anything that appears to be a transient blip (only present in the most recent week).
 
@@ -178,3 +191,8 @@ Consult these for detailed guidance:
 - **`references/datadog-queries.md`** -- Query patterns for Datadog APM, DBM, RUM, metrics; deep link URL construction
 - **`references/local-benchmarking.md`** -- Methods for proving fixes locally (Rails benchmarks, EXPLAIN ANALYZE, Lighthouse, React Profiler)
 - **`references/log-schema.md`** -- Performance log entry schema, evidence file formats, summary report structure
+- **`references/packwerk-team-endpoints.md`** -- How to map packwerk team ownership to Datadog APM resource name patterns for team-scoped sweeps
+
+### Local Overrides
+
+The `local/` directory (gitignored) holds org-specific references that supplement the standard files above. Check `local/` first when loading references — if a local file provides pre-built mappings (e.g., team-to-endpoint patterns), use it directly instead of running dynamic discovery.

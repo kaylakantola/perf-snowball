@@ -84,6 +84,15 @@ snowball sweep, focus on database queries
 snowball sweep, focus on the checkout flow
 ```
 
+**Focus on a specific team (requires packwerk):**
+
+```
+snowball sweep, focus on Commerce team
+snowball sweep, focus on Commerce team database queries
+```
+
+Team-scoped sweeps use packwerk pack ownership to filter Datadog queries to only endpoints owned by that team. See [Local Overrides](#local-overrides) for how to cache team-to-endpoint mappings.
+
 ### Check Pending Fixes
 
 ```
@@ -144,6 +153,23 @@ All data lives in `~/.claude/snowball-performance-log/`:
 | `retro.md` | Session feedback for plugin improvement |
 
 Datadog credentials are **never stored in the plugin** -- they live in your environment variables.
+
+## Local Overrides
+
+The `local/` directory is **gitignored** and holds org-specific references that supplement the generic plugin. This lets you keep team names, endpoint mappings, internal dashboard links, and other org-specific details without pushing them to the shared plugin repo.
+
+**To set up local overrides:**
+
+1. Create files in `local/` following the naming convention `{org}-{topic}.md` (e.g., `{orgname}-team-endpoints.md`)
+2. The skill checks `local/` first when loading references. If a local file provides pre-built data (e.g., team-to-endpoint mappings), it's used directly instead of running dynamic discovery.
+
+**What goes in `local/`:**
+- Team-to-pack ownership mappings
+- Pre-built endpoint patterns for Datadog filtering
+- Internal dashboard links and service names
+- Anything specific to your org's codebase
+
+See `local/README.md` for more details.
 
 ## Portability
 
